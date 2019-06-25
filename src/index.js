@@ -59,7 +59,7 @@ class Calendar extends Component {
   }
 
   renderDay(opts={}) {
-    var baseClasses = "day noselect";
+    var baseClasses = "calender-day calender-noselect";
     var today = "";
     var todayStyle = {};
     var containerStyle = {};
@@ -73,16 +73,16 @@ class Calendar extends Component {
     var selected = "";
     var selectedStyle = {};
     if( opts.selected ) {
-      selected = "selected";
+      selected = "calender-selected";
       selectedStyle = {
         backgroundColor: this.props.accentColor
       }
       containerStyle = {
-        color: '#ffffff'
+        color: '#3498DB'
       }
     }
 
-    baseClasses += opts.current ? "" : " non-current";
+    baseClasses += opts.current ? "" : " calender-non-current";
 
     return (<div className={baseClasses}
                 style={containerStyle}>
@@ -148,7 +148,7 @@ class Calendar extends Component {
     var header = [];
 
     for (var i = 0; i < config.week_subs.length; i++) {
-      header.push(<p className='day-headers noselect'>
+      header.push(<p className='calender-day-headers calender-noselect'>
                     {config.week_subs[i]}
                   </p>);
     }
@@ -174,24 +174,24 @@ class Calendar extends Component {
 
     var upperDate = null;
     if( this.props.showHeader ) {
-      upperDate = (<div className='flex-2 header center' style={{
+      upperDate = (<div className='flex-2 calender-header center' style={{
           backgroundColor: this.props.accentColor
         }}>
-        <p className="header-month">{tMonth.toUpperCase()}</p>
-        <p className="header-day">{tDate}</p>
+        <p className="calender-header-month">{tMonth.toUpperCase()}</p>
+        <p className="calender-header-day">{tDate}</p>
       </div>);
     }
     return (<div className={this.props.orientation}>
       {upperDate}
-      <div className="padding">
-        <div className='month'>
-          <img className="month-arrow-left" src={ic_back} alt="back" onClick={this.prev.bind(this)}></img>
-          <p className="month-title">{month}<br/>
+      <div className="calender-padding">
+        <div className='calender-month'>
+          <img className="calender-month-arrow-left" src={ic_back} alt="back" onClick={this.prev.bind(this)}></img>
+          <p className="calender-month-title">{month}<br/>
           <span className="month-year">{year}</span>
           </p>
-          <img className="month-arrow-right" src={ic_forward} alt="forward" onClick={this.next.bind(this)}></img>
+          <img className="calender-month-arrow-right" src={ic_forward} alt="forward" onClick={this.next.bind(this)}></img>
         </div>
-        <div className='footer'>
+        <div className='calender-footer'>
           {header}
           {days}
         </div>
