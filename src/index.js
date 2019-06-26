@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import './index.css';
 import ic_back from './ic_back.svg';
 import ic_forward from './ic_forward.svg';
+import { log } from 'util';
 
 const config = {
     months: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
@@ -13,12 +14,14 @@ const config = {
       return new Date();
     }
 }
+
 const TODAY = config.today();
 
 class Calendar extends Component {
 
   constructor(props) {
     super(props);
+
     this.state = {
       current: config.today(),
       selected: config.today(),
@@ -59,11 +62,11 @@ class Calendar extends Component {
   }
 
   renderDay(opts={}) {
-    var baseClasses = "calender-day calender-noselect";
+    var baseClasses = "calender-day calender-noselect calender-non-current";
     var today = "";
     var todayStyle = {};
     var containerStyle = {};
-    if( opts.today ) {
+    if( opts.today) {
       today = "current";
       todayStyle = {
         borderColor: this.props.accentColor,
@@ -81,8 +84,18 @@ class Calendar extends Component {
         color: '#3498DB'
       }
     }
+    console.log(opts.date.getMonth());
 
-    baseClasses += opts.current ? "" : " calender-non-current";
+    // baseClasses += opts.current ? "" : " calender-non-current";
+    
+    // write the month logic here. 
+    for(let index = 0; index < opts.selectedDayList.length; index++){
+      let cmpDate = new Date(opts.selectedDayList[index]); 
+      
+      if(cmpDate.getDate() == opts.date.getDate() && cmpDate.getMonth() == opts.date.getMonth()){
+        baseClasses = "calender-day calender-noselect"
+      }
+    }
 
     return (<div className={baseClasses}
                 style={containerStyle}>
@@ -96,7 +109,15 @@ class Calendar extends Component {
   }
 
   renderDays(copy) {
-    var days = [];
+    if(this.props.selectedDays.length === 0) return null
+    var days =  []; 
+    var selectedDay = []; 
+    
+    
+    for(let i = 0; i< this.props.selectedDays.length; i++){
+      selectedDay.push(new Date(this.props.selectedDays[i].date)); 
+    }
+    
 
     // set to beginning of month
     copy.setDate(1);
@@ -132,9 +153,12 @@ class Calendar extends Component {
           TODAY.getDate() === copy.getDate() &&
           TODAY.getMonth() === copy.getMonth());
 
+      // console.log("this is updated copy: ", copy);
+      
       days.push(this.renderDay({
         today: isToday,
         selected: isSelected,
+        selectedDayList: selectedDay, 
         current: inMonth,
         month: (inMonth ? 0 : (lastMonth ? -1 : 1)),
         date: copy
@@ -156,6 +180,10 @@ class Calendar extends Component {
     return header;
   }
 
+  componentWillReceiveProps(nextProps) {
+    this.setState({ current: new Date(nextProps.selectedDays[0].date) });
+  }
+
   render() {
     // get su-sat header
     var header = this.renderHeaders();
@@ -166,12 +194,13 @@ class Calendar extends Component {
     // get the month days
     var days = this.renderDays(copy);
 
-    var tMonth = config.months[this.state.selected.getMonth()];
+    var tMonth = config.months[this.state.selected];
     var tDate = this.state.selected.getDate();
     var month = config.months[this.state.current.getMonth()];
+
     var year = this.state.current.getFullYear();
     var date = this.state.current.getDate();
-
+    console.log("Just a log 2 : ",this.props.selectedDays); 
     var upperDate = null;
     if( this.props.showHeader ) {
       upperDate = (<div className='flex-2 calender-header center' style={{
