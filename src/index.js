@@ -64,6 +64,7 @@ class Calendar extends Component {
   renderDay(opts={}) {
     var baseClasses = "calender-day calender-noselect calender-non-current";
     var today = "";
+    var selectFlag = false; 
     var todayStyle = {};
     var containerStyle = {};
     if( opts.today) {
@@ -94,6 +95,7 @@ class Calendar extends Component {
       
       if(cmpDate.getDate() == opts.date.getDate() && cmpDate.getMonth() == opts.date.getMonth()){
         baseClasses = "calender-day calender-noselect"
+        selectFlag = true; 
       }
     }
 
@@ -103,7 +105,8 @@ class Calendar extends Component {
               <div className={selected} style={selectedStyle}></div>
               <p onClick={ (ev) => {
                 var day = ev.target.innerHTML;
-                this._onDatePicked(opts.month, day);
+                selectFlag?
+                this._onDatePicked(opts.month, day) :""
               }}>{opts.date.getDate()}</p>
             </div>);
   }
@@ -181,6 +184,9 @@ class Calendar extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    // This will erase any local state updates!
+    // Do not do this.
+   
     this.setState({ current: new Date(nextProps.selectedDays[0].date) });
   }
 
