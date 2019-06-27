@@ -86,19 +86,19 @@ class Calendar extends Component {
       }
     }
     console.log(opts.date.getMonth());
-
-    // baseClasses += opts.current ? "" : " calender-non-current";
-    
+  
     // write the month logic here. 
-    for(let index = 0; index < opts.selectedDayList.length; index++){
-      let cmpDate = new Date(opts.selectedDayList[index]); 
-      
-      if(cmpDate.getDate() == opts.date.getDate() && cmpDate.getMonth() == opts.date.getMonth()){
-        baseClasses = "calender-day calender-noselect"
-        selectFlag = true; 
+    if(opts.selectedDayList != ""){
+      for(let index = 0; index < opts.selectedDayList.length; index++){
+        let cmpDate = new Date(opts.selectedDayList[index]); 
+        
+        if(cmpDate.getDate() == opts.date.getDate() && cmpDate.getMonth() == opts.date.getMonth()){
+          baseClasses = "calender-day calender-noselect"
+          selectFlag = true; 
+        }
       }
     }
-
+    
     return (<div className={baseClasses}
                 style={containerStyle}>
               <div className={today} style={todayStyle}></div>
@@ -112,14 +112,18 @@ class Calendar extends Component {
   }
 
   renderDays(copy) {
-    if(this.props.selectedDays.length === 0) return null
+    console.log(this.props.selectedDays);
+    
+    // if(this.props.selectedDays.length === 0) return null
     var days =  []; 
     var selectedDay = []; 
     
-    
-    for(let i = 0; i< this.props.selectedDays.length; i++){
-      selectedDay.push(new Date(this.props.selectedDays[i].date)); 
+    if(this.props.selectedDays != undefined){
+      for(let i = 0; i< this.props.selectedDays.length; i++){
+        selectedDay.push(new Date(this.props.selectedDays[i].date)); 
+      }
     }
+  
     
 
     // set to beginning of month
@@ -161,7 +165,7 @@ class Calendar extends Component {
       days.push(this.renderDay({
         today: isToday,
         selected: isSelected,
-        selectedDayList: selectedDay, 
+        selectedDayList: selectedDay || "", 
         current: inMonth,
         month: (inMonth ? 0 : (lastMonth ? -1 : 1)),
         date: copy
@@ -183,10 +187,15 @@ class Calendar extends Component {
     return header;
   }
 
+  componentDidMount(){
+    if(this.props.selectedDays){
+      this.setState({ current: new Date(this.props.selectedDays[0].date) });
+    }
+  }
+
   componentWillReceiveProps(nextProps) {
     // This will erase any local state updates!
     // Do not do this.
-   
     this.setState({ current: new Date(nextProps.selectedDays[0].date) });
   }
 
