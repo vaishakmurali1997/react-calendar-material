@@ -187,15 +187,8 @@ class Calendar extends Component {
     return header;
   }
 
-  componentDidMount(){
-    if(this.props.selectedDays){
-      this.setState({ current: new Date(this.props.selectedDays[0].date) });
-    }
-  }
 
   componentWillReceiveProps(nextProps) {
-    // This will erase any local state updates!
-    // Do not do this.
     this.setState({ current: new Date(nextProps.selectedDays[0].date) });
   }
 
