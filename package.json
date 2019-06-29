@@ -1,6 +1,6 @@
 {
   "name": "react-calendar-material",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "description": "A react calendar borrowing heavily from google's material design",
   "main": "lib/index.js",
   "scripts": {
