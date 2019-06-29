@@ -86,12 +86,11 @@ class Calendar extends Component {
       }
     }
     console.log(opts.date.getMonth());
-  
+    opts.selectedDayList
     // write the month logic here. 
     if(opts.selectedDayList != ""){
       for(let index = 0; index < opts.selectedDayList.length; index++){
         let cmpDate = new Date(opts.selectedDayList[index]); 
-        
         if(cmpDate.getDate() == opts.date.getDate() && cmpDate.getMonth() == opts.date.getMonth()){
           baseClasses = "calender-day calender-noselect"
           selectFlag = true; 
@@ -112,19 +111,16 @@ class Calendar extends Component {
   }
 
   renderDays(copy) {
-    console.log(this.props.selectedDays);
     
     // if(this.props.selectedDays.length === 0) return null
     var days =  []; 
     var selectedDay = []; 
     
-    if(this.props.selectedDays != undefined){
-      for(let i = 0; i< this.props.selectedDays.length; i++){
+    if(this.props.selectedDays != undefined || this.props.selectedDays != []){ 
+      for(let i = 0; i < this.props.selectedDays.length; i++){
         selectedDay.push(new Date(this.props.selectedDays[i].date)); 
       }
     }
-  
-    
 
     // set to beginning of month
     copy.setDate(1);
@@ -189,7 +185,11 @@ class Calendar extends Component {
 
 
   componentWillReceiveProps(nextProps) {
-    this.setState({ current: new Date(nextProps.selectedDays[0].date) });
+    if(nextProps != undefined){
+      if(nextProps.selectedDays[0] != undefined){
+        this.setState({ current: new Date(nextProps.selectedDays[0].date) });
+      }
+    }
   }
 
   render() {
