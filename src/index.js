@@ -85,7 +85,7 @@ class Calendar extends Component {
         color: '#3498DB'
       }
     }
-    console.log(opts.date.getMonth());
+
     opts.selectedDayList
     // write the month logic here. 
     if(opts.selectedDayList != ""){
@@ -111,17 +111,20 @@ class Calendar extends Component {
   }
 
   renderDays(copy) {
-    
+ 
     // if(this.props.selectedDays.length === 0) return null
     var days =  []; 
     var selectedDay = []; 
-    
     if(this.props.selectedDays != undefined || this.props.selectedDays != []){ 
-      for(let i = 0; i < this.props.selectedDays.length; i++){
-        selectedDay.push(new Date(this.props.selectedDays[i].date)); 
+      for(let i = 2; i < this.props.selectedDays.length; i++){
+        var dates = this.props.selectedDays[i].date
+        if(dates.split("-")[2].length < 2){
+          selectedDay.push(new Date(`${dates.split("-")[0]}-${dates.split("-")[1]}-0${dates.split("-")[2]}`))
+        }else{
+          selectedDay.push(new Date(this.props.selectedDays[i].date)); 
+        }
       }
     }
-
     // set to beginning of month
     copy.setDate(1);
 
@@ -167,7 +170,7 @@ class Calendar extends Component {
         date: copy
       }));
     }
-
+    
     return days;
   }
 
@@ -187,7 +190,17 @@ class Calendar extends Component {
   componentWillReceiveProps(nextProps) {
     if(nextProps != undefined){
       if(nextProps.selectedDays[0] != undefined){
-        this.setState({ current: new Date(nextProps.selectedDays[0].date) });
+       
+        if(nextProps.selectedDays[0].date.split("-")[1].length < 2){
+          if(nextProps.selectedDays[0].date.split("-")[2].length < 2){
+            this.setState({ current: new Date(`${nextProps.selectedDays[0].date.split("-")[0]}-0${nextProps.selectedDays[0].date.split("-")[1]}-0${nextProps.selectedDays[0].date.split("-")[2]}`)});
+          }else{
+            this.setState({ current: new Date(`${nextProps.selectedDays[0].date.split("-")[0]}-0${nextProps.selectedDays[0].date.split("-")[1]}-${nextProps.selectedDays[0].date.split("-")[2]}`)});
+          }
+         
+        }else{
+          this.setState({ current: new Date(nextProps.selectedDays[0].date) });
+        }
       }
     }
   }
