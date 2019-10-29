@@ -23,8 +23,8 @@ class Calendar extends Component {
     super(props);
 
     this.state = {
-      current: config.today(),
-      selected: config.today(),
+      current: new Date(),
+      selected: new Date(),
       ldom: 30
     };
   }
@@ -125,9 +125,10 @@ class Calendar extends Component {
         }
       }
     }
+
     // set to beginning of month
     copy.setDate(1);
-
+  
     // if we are missing no offset, include the previous week
     var offset = copy.getDay() === 0 ? 7 : copy.getDay();
 
@@ -170,7 +171,6 @@ class Calendar extends Component {
         date: copy
       }));
     }
-    
     return days;
   }
 
@@ -190,14 +190,15 @@ class Calendar extends Component {
   componentWillReceiveProps(nextProps) {
     if(nextProps != undefined){
       if(nextProps.selectedDays[0] != undefined){
-       
         if(nextProps.selectedDays[0].date.split("-")[1].length < 2){
+
           if(nextProps.selectedDays[0].date.split("-")[2].length < 2){
             this.setState({ current: new Date(`${nextProps.selectedDays[0].date.split("-")[0]}-0${nextProps.selectedDays[0].date.split("-")[1]}-0${nextProps.selectedDays[0].date.split("-")[2]}`)});
           }else{
             this.setState({ current: new Date(`${nextProps.selectedDays[0].date.split("-")[0]}-0${nextProps.selectedDays[0].date.split("-")[1]}-${nextProps.selectedDays[0].date.split("-")[2]}`)});
           }
-         
+        }else if(nextProps.selectedDays[0].date.split("-")[2].length < 2){
+          this.setState({ current: new Date(`${nextProps.selectedDays[0].date.split("-")[0]}-${nextProps.selectedDays[0].date.split("-")[1]}-0${nextProps.selectedDays[0].date.split("-")[2]}`)});
         }else{
           this.setState({ current: new Date(nextProps.selectedDays[0].date) });
         }
@@ -211,7 +212,8 @@ class Calendar extends Component {
 
     // copy our current time state
     var copy = new Date(this.state.current.getTime());
-
+    console.log("SASASASA :: ", this.state.current)
+    console.log("COOOLLLL ::: ", copy)
     // get the month days
     var days = this.renderDays(copy);
 
